@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electric Bill Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="energy-bg">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="grid-overlay"></div>
+    </div>
+
+    <main class="app-container">
+
+        <header id="progress-header" class="progress-header hidden">
+            <div class="step-indicator">
+                <div class="step step-1 active" id="step-badge-1">
+                    <div class="badge"><i class="fa-solid fa-bolt"></i></div>
+                    <span>Part 1</span>
+                </div>
+                <div class="step-line" id="line-1"></div>
+                <div class="step step-2" id="step-badge-2">
+                    <div class="badge"><i class="fa-solid fa-receipt"></i></div>
+                    <span>Part 2</span>
+                </div>
+                <div class="step-line" id="line-2"></div>
+                <div class="step step-3" id="step-badge-3">
+                    <div class="badge"><i class="fa-solid fa-calculator"></i></div>
+                    <span>Final</span>
+                </div>
+            </div>
+        </header>
+
+        <div id="error-toast" class="error-toast hidden" role="alert">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span id="error-message">Invalid input</span>
+        </div>
+
+        <section id="page-landing" class="view-page active">
+            <div class="hero-content">
+                <div class="icon-pulse-container">
+                    <i class="fa-solid fa-bolt-lightning hero-icon"></i>
+                </div>
+                <h1 class="main-title">Electric Bill Calculator</h1>
+                <p class="subtitle">Smart consumption estimation engine with automated tariff slabbing & historical bill auditing.</p>
+                
+                <div class="feature-pills">
+                    <span class="pill"><i class="fa-solid fa-chart-pie"></i> Progressive Slabs</span>
+                    <span class="pill"><i class="fa-solid fa-file-invoice-dollar"></i> OCR Bill Processing</span>
+                    <span class="pill"><i class="fa-solid fa-shield-halved"></i> Precise Analytics</span>
+                </div>
+
+                <button id="btn-start" class="btn-primary btn-hero">
+                    <span>START</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="page-part1" class="view-page hidden">
+            <div class="page-header">
+                <h2>Part 1 — Electricity Consumption</h2>
+                <p class="section-desc">Enter meter details and select your service tariff connection type.</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="prev-reading">
+                        <span>Previous Reading</span>
+                        <i class="fa-solid fa-circle-info info-icon" title="Reading taken from the previous month's electricity bill."></i>
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-clock-rotate-left input-icon"></i>
+                        <input type="number" id="prev-reading" placeholder="e.g. 1050" min="0" step="any">
+                    </div>
+                    <span class="field-hint">From previous month's bill</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="pres-reading">
+                        <span>Present Reading</span>
+                        <i class="fa-solid fa-circle-info info-icon" title="Current reading taken from the electricity meter."></i>
+                    </label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-gauge-high input-icon"></i>
+                        <input type="number" id="pres-reading" placeholder="e.g. 1278" min="0" step="any">
+                    </div>
+                    <span class="field-hint">Current meter status</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Units Consumed</div>
+                <div class="metric-value" id="display-units">0</div>
+                <span class="metric-unit">kWh</span>
+            </div>
+
+            <div class="tariff-section">
+                <h3 class="question-title">Which tariff type does your connection belong to?</h3>
+                
+                <div class="tariff-options" id="tariff-options">
+                    <label class="tariff-card">
+                        <input type="radio" name="tariff" value="Domestic">
+                        <div class="tariff-card-content">
+                            <i class="fa-solid fa-house"></i>
+                            <span class="tariff-name">Domestic</span>
+                            <span class="tariff-sub">Residential Tariff</span>
+                        </div>
+                    </label>
+
+                    <label class="tariff-card">
+                        <input type="radio" name="tariff" value="A">
+                        <div class="tariff-card-content">
+                            <i class="fa-solid fa-store"></i>
+                            <span class="tariff-name">A</span>
+                            <span class="tariff-sub">Commercial Low-Load</span>
+                        </div>
+                    </label>
+
+                    <label class="tariff-card">
+                        <input type="radio" name="tariff" value="B">
+                        <div class="tariff-card-content">
+                            <i class="fa-solid fa-industry"></i>
+                            <span class="tariff-name">B</span>
+                            <span class="tariff-sub">Industrial High-Load</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="result-box hidden" id="part1-result-box">
+                <div class="result-label">Part 1 — Energy Charges</div>
+                <div class="result-amount" id="display-part1-charges">₹0.00</div>
+                <div id="tariff-breakdown" class="tariff-breakdown"></div>
+            </div>
+
+            <div class="action-footer">
+                <button id="btn-part1-next" class="btn-primary btn-full" disabled>
+                    <span>NEXT</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="page-part2" class="view-page hidden">
+            <div class="page-header">
+                <h2>Part 2 — Taxes & Other Charges</h2>
+                <p class="section-desc">Determine non-energy charges using previous bill audits or direct entries.</p>
+            </div>
+
+            <div class="method-tabs">
+                <button type="button" class="tab-btn active" id="tab-upload" data-target="method-upload">
+                    <i class="fa-solid fa-file-arrow-up"></i>
+                    Method 1: Upload Bills
+                </button>
+                <button type="button" class="tab-btn" id="tab-manual" data-target="method-manual">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    Method 2: Manual Entry
+                </button>
+            </div>
+
+            <div id="method-upload" class="method-content active">
+                <div class="dropzone" id="dropzone">
+                    <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
+                    <p class="drop-title">Drag & drop previous bill images or <span>Browse</span></p>
+                    <p class="drop-subtitle">Supported formats: JPG, JPEG, PNG (Upload 1 or more)</p>
+                    <input type="file" id="file-input" accept="image/jpeg, image/jpg, image/png" multiple class="file-input-hidden">
+                </div>
+
+                <div id="file-list-container" class="file-list-container hidden">
+                    <h4>Processed Bills</h4>
+                    <div id="file-list" class="file-list"></div>
+                </div>
+            </div>
+
+            <div id="method-manual" class="method-content hidden">
+                <p class="manual-intro">Enter the non-energy taxes/duties amount from your previous bill(s):</p>
+                <div id="manual-inputs-list" class="manual-inputs-list">
+                    </div>
+                <button type="button" id="btn-add-manual" class="btn-secondary">
+                    <i class="fa-solid fa-plus"></i> Add Another Bill Entry
+                </button>
+            </div>
+
+            <div class="result-box card-highlight" id="part2-result-box">
+                <div class="result-label">Part 2 — Average Taxes & Other Charges</div>
+                <div class="result-amount" id="display-part2-charges">₹0.00</div>
+                <p class="calc-note" id="display-part2-note">Awaiting valid input data...</p>
+            </div>
+
+            <div class="action-footer nav-dual">
+                <button id="btn-part2-back" class="btn-outline">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>BACK</span>
+                </button>
+                <button id="btn-part2-next" class="btn-primary" disabled>
+                    <span>NEXT</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="page-final" class="view-page hidden">
+            <div class="page-header center-header">
+                <div class="badge-icon-wrap"><i class="fa-solid fa-file-invoice"></i></div>
+                <h2>Final Bill Calculation</h2>
+                <p class="section-desc">Consolidated estimation breakdown for current billing cycle</p>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-row">
+                    <span class="summary-label">
+                        <i class="fa-solid fa-bolt color-accent"></i>
+                        Part 1 — Energy Charges
+                    </span>
+                    <span class="summary-value" id="final-part1">₹0.00</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-row">
+                    <span class="summary-label">
+                        <i class="fa-solid fa-receipt color-accent"></i>
+                        Part 2 — Average Taxes & Other Charges
+                    </span>
+                    <span class="summary-value" id="final-part2">₹0.00</span>
+                </div>
+
+                <div class="total-banner">
+                    <div class="total-label">Estimated Electric Bill</div>
+                    <div class="total-amount" id="final-total">₹0.00</div>
+                </div>
+            </div>
+
+            <div class="notice-box">
+                <i class="fa-solid fa-circle-info notice-icon"></i>
+                <p>Approximate calculation based on previous bill information. The actual electricity bill may vary.</p>
+            </div>
+
+            <div class="action-footer nav-dual">
+                <button id="btn-final-back" class="btn-outline">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>BACK TO EDIT</span>
+                </button>
+                <button id="btn-restart" class="btn-primary">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>NEW CALCULATOR SESSION</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
